@@ -1,0 +1,113 @@
+Capture the flag - Dive Into Systems
+
+---
+
+Ch02_09_xx work
+
+---
+
+---
+
+**Ch02_09_Ltrace :**
+
+1. Ran executable file using "./Ch02_09_Ltrace"
+2. Message:
+   ***
+   In this level, you will be forced to use dynamic analysis to find the
+   password. When programs are dynamically linked, it is possible to monitor
+   their calls to the libraries they depend upon such as the strcmp() calls
+   to the Standard C library. While you can solve this level in many ways try
+   using "ltrace".
+   ***
+3. Ran executable file using "ltrace Ch02_09_Ltrace"
+4. Prompt for password appeared
+5. Entered test password
+6. Message:
+   ***
+   ) = 1
+   strcmp("311", "ycgU6Vdd") = -70
+   puts("Try again."Try again.
+   ) = 11
+   +++ exited (status 0) +++
+   ***
+7. Password is shown in error message - displays how it checks for password: uses strcmp()
+8. Ran again and entered correct password
+9. Solved!
+
+---
+
+---
+
+**Ch02_09_LdPreloadGetUID:**
+
+1. Ran executable file using "./Ch02_09_LdPreloadGetUID"
+2. Message:
+   ***
+   Malware can hijack many functions through the use of LD_PRELOAD. Security
+   checks using the function getuid() are particularly vulnerable.
+   In this level, when you guess the password incorrectly, the program will
+   give you a hint as to what the password is, if you have a specific
+   UID. If you are able to to hijack the getuid() function and get it to
+   output a specific UID, you will receive the password. In order to
+   solve this level, create a dynamic shared object file that implements
+   getuid() and returns the UID. Use LD_PRELOAD to preload your library.
+   You will need to employ specific flags within gcc that will produce
+   dynamic, position-independent, shared object code.
+   ***
+3. Entered test password:
+4. Message:
+
+   ***
+
+   If you run this program with the UID of 174963, the password
+   the password will be given on the nextline.
+
+   Error: UID 19550 ran us. We expected UID 174963.
+   Try again.
+
+   ***
+
+5. Create a ".c" file (can have any name)
+
+   - added:
+     #include <unistd.h>
+     uid_t getuid(void) {
+     return 174963;
+     }
+
+6. Used "man ld.so" -> used to create a shared .o file
+7. Used "gcc -shared -rdynamic -o main.c main.so"
+   - -shared enables "ld" indirectly
+8. man "ld.so" again to look for "LD_PRELOAD" mentioned in the original message
+   - The order of using LD_PRELOAD is important
+9. Ran program using "LD_PRELOAD=./main.so ./Ch02_09_LdPreloadGetUID"
+10. Entered test password again
+11. getuid function provided hint to password
+
+- Hint: gg7GKdNqF
+
+12. Solved!
+
+---
+
+---
+
+**Ch02_09_Readelf:**
+
+1. Ran executable file using "./Ch02_09_Readelf"
+2. Message:
+   ***
+   In this level, you will experiment with basic static analysis of binaries.
+   Your goal is to find the password that unlocks the program so it prints
+   "Good Job". While you can solve this level many ways, try using the
+   "readelf -a <binary>" to find the section number where the password might
+   be stored, then use "readelf -x <section_number> <binary>" to list the
+   contents of the section which likely has the password in it. You may also
+   use the command "objdump -j" on the appropriate section of the binary
+   or "objdump -s" to solve it.
+   ***
+3. Used "man objdump"
+   - Other option is to use "hexdump -C ./Ch02_09_Readelf"
+     - This was disucssed in class (I missed that class)
+4. I looked through the contents and found the password: 17qSVuyT
+5. Solved!

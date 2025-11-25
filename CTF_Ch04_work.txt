@@ -1,0 +1,198 @@
+**Capture the flag**
+----------------------------------------------------------------------
+----------------------------------------------------------------------
+
+Ch04 work
+----------------------------------------------------------------------
+----------------------------------------------------------------------
+Ch04_00_Showkey work
+
+1. Ran "./Ch04\_00\_Showkey"
+2. Message:
+   In this level, you will be converting from ASCII to hexadecimal, decimal,
+   and octal.  Most often, students look up a table online and directly
+   convert. An easier way is to use a tool such as "showkey".  In this
+   level, use "showkey -a" to discover the representations of
+   an ASCII string.  You will be given the password represented as a string,
+   but you will need to supply 3 arguments which represent the password in
+   its hexadecimal, decimal, and octal codes.  For hexadecimal, use 2 digits.
+   For decimal and octal, use 3 digits and zero pad on the left for codes
+   below 100.  For example, a password string of ab% would yield a password
+   of 616225 097098037 141142045
+
+3. Used "man showkey" to learn about showkey
+	-- "-showkey -a" is used to show the ASCII, OCTAL, and HEXADECIMAL values of every key typed in (use ctrl + D to quit)
+
+4. Ran "-showkey -a" on "D", "O", "U", and lowercase zee "z"
+	-- D: D        68 0104 0x44
+	-- O: O        79 0117 0x4f
+	-- U: U        85 0125 0x55
+	-- z: z       122 0172 0x7a
+
+5. Re-ran "./Ch04\_00\_Showkey"
+	-- The executable file takes in 3 arguments in the following order it asks is HEX, ASCII, OCTAL
+	-- HEX : use 2 digits
+	-- ASCII/OCTAL : use 3 digits
+	-- Type in hex value, enter, type in ascii value, enter, type in octal value, enter
+
+6. 444f557a 068079085122 104117125172
+
+7. Solved!
+
+*****************************************************************************************************************
+Ch04_03_TwosComplement
+
+1. Ran "./Ch04_03_TwosComplement
+
+2. Message: 
+ "Many computer applications need a proper representation of negative
+  numbers.  The most common of these is the two's-complement form.
+  The form can be represented as a vector of length w bits:
+     x = [x_w-1, x_w-2, ..., x_0].
+  The most significant bit x_w-1 has a value of -2^(w-1) while the rest
+  of the bits are positive powers of 2.  Thus if the most significant bit
+  is set, the number is negative, while if it is cleared, it is positive.
+  Learning to work with two's-complement is important due to overflow issues
+  and the improper casting between unsigned and signed values.  In this
+  level, the passcode is encoded as a 12-bit two's complement number.  Find
+  its signed decimal value to complete the level."
+
+		111010100010
+
+3. Open Calculator --> programmer option
+	
+4. Use word option and typed in binary number given. 
+	NOTE: word is 16 bits wide. To account for 12-bits get the value of the 13th bit. This applies to any number of bits. Example 16-bits, get 17th bit,
+		The value for (0001 0000 0000 0000) is equal to 4096
+	Then subtract the 12-bit value given in the problem from the 4096 decimal value
+		The value for (1110 1010 0010) is 3746
+
+5. The decimal result of 350 is our starting point.
+	4096 - 3746 = 350
+
+6. Now process two's complement as normal
+
+7. Use NOT operation on decimal 350 value -> one's complement
+	NOT(350) = -351
+
+8. Add one to that value to get two's complement
+	-350 + 1 = -350
+
+8. Solved!
+*****************************************************************************************************************
+Ch_04_05_IntOverflow
+
+1. Ran "./Ch04_05_IntOverflow"
+
+2. Message:
+ "Each unsigned integer data type has a maximum limit that will wraparound
+ to 0 if exceeded.  In this level, you are given an unsigned char, an
+ unsigned short, and an unsigned int in hexadecimal.  The password is
+ the corresponding 3 positive numbers (in decimal) that can be added
+ to each to overflow the data type to produce a sum of 0.
+
+   unsigned char addc, c=0x12;
+   unsigned short adds, s=0x822;
+   unsigned int addi, i=0xdd2f1c4f;
+   ...
+   printf("Your numbers are: %hhx %hx %x\n", c, s, i);
+   ...
+   printf("Enter the password: ");
+   scanf("%hhu %hu %u", &addc, &adds, &addi);
+   c += addc;   s += adds;   i += addi;  ...
+   if (!c && !s && !i)
+     printf("Good Job.");
+
+ Your numbers are: 12 822 dd2f1c4f
+
+3. 
+
+
+*****************************************************************************************************************
+Ch04_06_XorInt
+
+1. Ran "./Ch04_06_XorInt"
+
+2. Message:
+ "Try out my brand-new XOR cipher.  Enter a 4-byte hexadecimal number
+ (e.g. 4f91853a) and see how my cipher encrypts it.  While it is highly
+ unlikely you will be able to guess the key I am using out of the over
+ 4 billion possible values, rather than crash, the program will instead
+ print "Good Job." and exit if you happen to input the key I'm using
+ We have heard some rumors about XOR being vulnerable to chosen plaintext
+ attacks. Maybe if we find something on Google, we'll switch to another.
+ Since I know you are well-versed in debuggers and could probably pull
+ the key out of memory, I have conveniently disabled debugging for you."
+
+3. This took me a while to figure out and help from Jesse Chaney. Basically using the XOR truth table we know:
+
+              T           F            Result
+	------------|--------------|----------------
+              0     |       0      |       0    
+                    |              |    
+              0     |       1      |       1 (or other key)   
+                    |              |    
+              1     |       0      |       1 (or other key)
+                    |              |    
+              1     |       1      |       0                    
+
+ From this we know that when one value equals zero (0), the other will be one (1) or some "key" that can be used as a placeholder. 
+
+4. Knowing that the XOR truth table will return the key/value when one value is zero (0), we can type the integer value zero (0) as our key and we will get our key returned. 
+
+5. The key returned is : 466cf50c
+
+6. Type in the returned key
+
+7. Solved
+
+*****************************************************************************************************************
+Ch04_07_Endian
+
+1. Ran "./Ch04_07_Endian
+
+2. Message:
+"Endianness refers to the convention used to interpret bytes in a data word.
+ Little-endian systems store the Least significant byte in the Lowest
+ address (LLL) while big-endian systems store the most significant byte
+ of a word in the lowest address. For example, if we had the quad word
+ 0x1234567890ABCDEF, big endian systems would store 0x12 in the lowest
+ address while little endian systems would store 0xEF in the lowest address.
+ Similarly, if we had the double word 0x01020304, big endian systems
+ would store the 0x01 in the lowest address while little endian systems
+ would store the 0x04 in the lowest address.  This level contains the
+ following code (where xxxxxxxx is substituted for the level password)
+    char password[9]="xxxxxxxx";
+    unsigned int * ip;
+    ip = (unsigned int *) &password;
+    printf("%08x : %08x\n", *ip, *(ip+1));
+ Use your knowledge of ASCII encoding and endianness to find the password
+
+ Output of above C code
+ 63674a72 : 5a6e4b5a       "
+
+3. The output shown displays the password as hex values in reverse order because it is in (little or big?)
+
+4. I wrote the output in reverse:
+	724a6763 : 5a4b6e5a
+
+5. Using man ascii I converted the hex values into their characters in their new formatted order
+	- 72 : r
+	- 4a : J (uppercase)
+	- 67 : g
+	- 63 : c
+	- 5a : Z (uppercase)
+	- 4b : K (uppercase)
+	- 6e : n
+	- 5a : Z (uppercase)
+
+6. Together the new password is : rJgcZKnZ
+ 
+7. Solved
+*****************************************************************************************************************
+Ch_04_08_FloatConvert
+
+
+
+
+

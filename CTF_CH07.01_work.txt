@@ -1,0 +1,67 @@
+CTF_CH07.01_work
+************************************************************************************************************
+************************************************************************************************************
+Ch07_01_GdbIntro
+
+1. Ran "./Ch07_01_GdbIntro"
+
+2. Message: 
+ "In this level, library tracing has been made difficult so that you can learn
+  to use gdb.  There are multiple strcmp() calls in main().  Two of them are
+  bogus and one of them is the real check.  You will need to set breakpoints at
+  each call to strcmp() in main.  To do so, load the program in gdb and do
+  a "layout split" to obtain multiple windows.  Then type "layout asm" to
+  get the assembly view.  Type "focus asm" to allow the arrow keys to scroll
+  up and down and find the 3 calls to strcmp().  Set a breakpoint at the
+  address of each call by typing something similar to "break *main+150" or
+  "break 0x4007dd".  The key to the level is that the bogus strcmp() calls
+  will be called multiple times, while the real call that checks the password
+  is called only once.  So, run the program and enter the password.  Check
+  which breakpoint is hit when the debugger is interrupted before continuing
+  by typing "c".  If a breakpoint is hit more than once, delete it using the
+  command "del <breakpoint #>".  When the program ends type "info br" to
+  identify the breakpoint that indicates where the real strcmp() is called.
+  
+  Now, with real strcmp() identified, you will be examining the parameters to
+  this call to discover the real password.  strcmp() is passed two pointers
+  to strings.  In the calling convention of x86-64, parameters are passed in
+  registers %rdi, %rsi, %rdx, %rcx, %r8, and %r9 (Diane's Silk Dress Cost $89).
+  With only two parameters, the pointers to the strings are stored in %rdi and
+  %rsi.  Run the program again and enter a password.  When the program breaks,
+  examine the memory pointed to by both %rdi and %rsi.  To do so, use the
+  examine command with the string option by typing "x /s $rdi" and
+  "x /s $rsi" to find the password.
+
+3. Ran "gdb ./Ch07_01_GdbIntro"
+	- type "lay asm" --> to be in asm view
+	- type "focus asm" --> not necessary; lets you move through asm with arrow keys
+
+4. Find in main section where strcmp is called
+	There are 3 "call" instructions that call strcmp
+
+5. Set breakpoint at each of the 3 calls
+	- Example use "*main+171" to set a breakpoint at that line
+	- IMPORTANT: include the asterisk (*) before "main" to ensure running debugger cycles through
+
+6. Type and enter "run"
+	
+7. Use "c" for continue
+
+8. Debugger will either loop through many times or once.
+	- If runs more than once delete breakpoint
+
+9. To delete breakpoint
+	- "info br" displays all breakpoints and will displays number of times cycled through
+
+10. Continue until you find strcmp that only runs once
+
+11. Run program again so that breakpoint is right at the correct breakpoint
+
+12. Type "x /s $rdi" to show the password you entered
+
+13. Type "x /s $rsi" to show actual password
+	"do8FUZAc"
+
+14. Solved
+
+************************************************************************************************************
