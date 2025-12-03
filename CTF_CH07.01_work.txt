@@ -65,3 +65,54 @@ Ch07_01_GdbIntro
 14. Solved
 
 ************************************************************************************************************
+Ch07_01GdbRegs
+
+1. Ran "./Ch07_01_GdbRegs"
+
+2. Message:
+"When a function returns an integer value of any size (char, short, int,
+ or long), it places the value into register a (%al, %ax, %eax, or %rax).
+ In this level, use gdb to locate the function retval_in_rax().  At the
+ end of the function, set a breakpoint at the retq instruction using a
+ command similar to "break *0x400300" or "break *retval_in_rax+30".
+ Run the program.  The password is the return value from the function
+ retval_in_rax().  Use the print command to reveal it (e.g. p $rax)
+"
+
+NOTE: It is useful to have to terminals open.
+
+3. At terminal run "gdb -tui ./Ch07_01_GdbRegs" or "gdb ./Ch07_01_GdbRegs"
+	- NOTE: 'tui' just opens the starts the layout format
+
+4. When in gdb, type "lay asm". Then type "focus asm"
+
+5. Find the function for retval_in_rax
+	- There will be multiple lines that have show "<retval_in_val>
+
+6. Set a breakpoint at the retval_in_rex function with the command that uses 'ret'
+	- use: "b *retval_in_rax+##" or "break *retval_in_rax##"
+	- NOTE: Where the '##' appear in the previous command, use the number that appears on your screen
+
+7. Set a breakpoint at '*0x400300"
+	- NOTE: This is given in the message. This might be a different address for you.
+
+NOTE: The order in which you set the breakpoints does not matter
+
+8. After setting the breakpoints in gdb, run the program
+	- you can use "run" or "r"
+
+9. You will prompted with the message again and asked to enter a password
+	- Enter any value or keys - it doesn't matter
+
+10. After entering password - and still in gdb - type "p $rax"
+	- This command was given in the message
+	- In my case: "$1 = 1906984398"
+
+11. The password is (in my case): 1906984398
+
+12. Solved!
+************************************************************************************************************
+
+
+
+

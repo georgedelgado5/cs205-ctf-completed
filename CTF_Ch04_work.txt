@@ -101,7 +101,30 @@ Ch_04_05_IntOverflow
 
  Your numbers are: 12 822 dd2f1c4f
 
-3. 
+3. Open Calculator --> programmer option
+
+4. Set the calculator to QWORD or 64-bit
+
+5. Determine the unsigned max value:
+	- 8-bit unsigned max is 100 = (FF + 1)
+	- 16-bit unsigned max is 10000 = (FFFFF + 1)
+	- 32-bit unsigned max is 100000000 = (FFFFFFFF + 1)
+
+6a. Subtract the value unsigned max value and the original value
+	- [ 0x100 - 0x12] = 0xEE = 238 in decimal
+	- [ 0x10000 - 0x822 ] = 0xF7DE = 63454 in decimal
+	- [ 0x100000000 - 0xDD2F1C4F ] = 584115121 in decimal
+
+OR
+
+6b. Subtract the value unsigned max value and the original value
+	- [ 0xFF - 0x12] = 0xED = 237 in decimal + 1 = 238 in decimal
+	- [ 0xFFFF - 0x822 ] = 0xF7DD = 63453 in decimal + 1 = 63454 in decimal
+	- [ 0xFFFFFFFF - 0xDD2F1C4F ] = 0x22D0E3B0 = 584115120 in decimal + 1 = 584115121 in decimal
+
+7. Answer: 238 63454 584115121
+
+8. Solved!
 
 
 *****************************************************************************************************************
@@ -188,6 +211,39 @@ Ch04_07_Endian
 *****************************************************************************************************************
 Ch_04_08_FloatConvert
 
+1. Ran "./Ch04_08_FloatConvert"
+
+2. Message:
+"In this level, you will practice correctly converting a single-precision
+ IEEE floating point number to its machine representation and vice-versa.
+ The password to unlock the level is the result of these two conversions
+ and will be read in using:   scanf("%x %f");
+ For your inconvenience, we have turned off debugging.
+
+ Give the machine representation of the floating point number  21084.0 (in hex)
+ followed by the floating point value represented by the hex pattern 47718700"
+
+3. For "single-precision" 32-bits total - from IEEE Arithmetic pdf slides
+	- 1 sign bit
+	- 8 exp bits
+	- 23 frac bits
+
+  	| s |  exp  |    frac    |
+
+	- s is sign bit
+	- exp field is an encoding to derive E (exponent)
+	- frac field is an encoding to derive M (mantissa)
+
+4. For normalized:
+	- E = (exp - bias)
+	- M = 1 + frac
+
+5. Bias is 2^(k - 1) - 1 = 2^(8 - 1) - 1 = 7
+
+6. To get value:
+	- V = (-1)^s * M * 2^E
+ 
+7. 
 
 
 
