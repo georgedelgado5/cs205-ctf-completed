@@ -1,0 +1,60 @@
+CTF_CH07.03_work
+************************************************************************************************************
+************************************************************************************************************
+Ch07_04_GdbPractice
+
+1. Ran "./Ch07_04_GdbPractice"
+
+2. Message:
+"In 64-bit x86, the first six integer and pointer arguments to function
+ calls are passed in registers.  Use what you have learned in previous GDB
+ levels to find the function call in main in which a pointer to the password
+ is passed in register rdi, the register that is used to pass the first
+ function parameter.
+"
+
+3. Run "gdb ./Ch07_04_GdbPractice"
+
+4. In gdb, run "layout asm" or "lay asm" to set the assembly viewer
+
+5. In main, find the password function call and set a break point using "break *main+55" or "b *main+55". It should be listed as "pwdFunction"
+	
+	NOTE : The function line number is unique to me. Your number might be different.
+
+6. Print the first argument using "x /s $rdi"
+	
+	"ZjYzYzcz"
+
+7. Solved!
+
+************************************************************************************************************
+Ch07_04_LinkedList
+
+1. Ran "./Ch07_04_LinkedList"
+
+2. Message:
+"This level is an exercise in tracking down segmentation faults.  In the
+ level, a linked list is being traversed.  Without the right password,
+ the final element will not point to NULL, but rather an uninitialized
+ memory location which will lead to a segmentation fault when followed.
+ Run GDB and use the command "where" to find the place in the level
+ where the segmentation fault happened.  Set a breakpoint and repeat
+ the level, tracing through the linked list traversal in assembly.
+ Find the address used in the penultimate link of the list (i.e. the one
+ before the segmentation fault).  Do so by tracking the values being moved
+ at each successive breakpoint that is hit.  Once you've found the
+ address, restart the level and enter this address in hexadecimal without
+ a preceding "0x" as the password, the program will then print the actual
+ password before seg faulting.  Run the program a final time with the
+ actual password to complete the level.
+"
+
+3. 
+
+************************************************************************************************************
+
+
+************************************************************************************************************
+
+
+************************************************************************************************************

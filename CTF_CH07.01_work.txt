@@ -112,7 +112,190 @@ NOTE: The order in which you set the breakpoints does not matter
 
 12. Solved!
 ************************************************************************************************************
+Ch07_02_AsciiInstr
 
+1. Ran "./Ch07_02_AsciiInstr"
+
+2. Message:
+"In this level, you will need to use your knowledge of ASCII encoding to find
+ the password. While you can solve this level in many ways, try using
+ "objdump -d" or the disassembler in gdb.
+"
+
+3. There are two methods to solving this problem.
+	1. Manually decode hex to ascii characters 
+	2. Use gdb to directly print password
+
+4. Manual decoding method:
+	1. Inspect the assembly code with either "objdump -d ./Ch07_02_AsciiInstr" or use gdb with "gdb ./Ch07_02_AsciiInstr"
+	
+	2. Our focus is on 'main' - find that section of code and inspect the beginning
+
+	NOTE: The assembler is using x64 bit registers. I investigated and found that the registers naming conventions are not vastly different
+		- eax ~ rax
+		- ebp ~ rbp → stack frame
+		- esp ~ rsp → stack
+
+	3. In main, immediately after the FIRST 'xor' command, we see ascii characters being moved onto the stack frame via the 'movb' and 'movl' commands. 
+		Decode each hex to ascii character in order
+		- 0x6e : n
+		- 0x33 : 3
+		- 0x55 : U (uppercase)
+		- 0x61 : a
+		- 0x65 : e
+		- 0x64 : d
+		- 0x50 : P (uppercase)
+		- 0x44 : D (uppercase)
+
+	4. Password : n3UaedPD
+	
+	5. Solved!
+
+5. gdb method:
+	1. Inspect the assembly code with "gdb ./Ch07_02_AsciiInstr"
+
+	2. In main, immediately after the FIRST 'xor' command, we see ascii characters being moved onto the stack frame via the 'movb' and 'movl' commands.
+		
+		NOTE: There are many 'movb' commands followed by one 'movl' command. 
+			- movb = move byte = 1-byte
+			- movl = move long = 4-bytes
+		      My best guess is that since this is a 64-bit register, the password is stored in 32-bits and the other 32-bits (eax) are set to zero.
+
+
+	3. Set a breakpoint at any point after the first 'movl' command. For me that was "b *main+62"
+
+	4. Run the code in gdb using the 'r' command
+
+	5. Gdb will stop at the breakpoint. At this point rbp contains the each fragment of the ascii password. To get the full password we use the command "x /s $rsp"
+		NOTE: We use 'rsp' instead of rbp because as with all our functions, we set the stack frame into the stack (rsp)
+
+		NOTE: The command "x /s $rsp" was shown in "./Ch07_01_GdbIntro" message
+
+	6. The full password will be displayed : "n3UaedPD"
+
+	7. Solved!
+
+6. Solved using both methods!
+************************************************************************************************************
+Ch07_01_GdbPX
+
+1. Ran "./Ch07_01_GdbPX"
+
+2. Message (very long): 
+"The goal of this level is to practice using the p (print) and x (examine
+ memory) commands to discover the address of a string and to examine the
+ memory locations that it is stored.  The password consists of 6 parts
+ separated by spaces with any hexadecimal parts input without the leading
+ "0x".  Using gdb in TUI mode, type "layout asm", then scroll to find
+ where the check_pass function is called in main.  A single argument is
+ passed to this function that is a pointer to a string. Set a breakpoint
+ right before the check_pass call (e.g. if call is at main+32, then in gdb
+ type "break *main+32").
+ 
+ Run the program.  When it breaks, refresh the screen via "Ctrl-L", then
+ print the contents of the register that contains the pointer (i.e. the
+ address of the string).  For x86-64, the register is %rdi. For IA32, it is
+ the register pushed onto the stack right before the call.  Print the
+ register in hex (i.e. p /x $rdi or p /x $eax). This is the first part of
+ the password.
+ 
+ For subsequent parts of the password, we will use the examine command.
+ The general format for the x command is: x /<n><f><u> where n is the number
+ of units, f is format, and u is the size of the unit.
+ 
+ The second part of the password is the 8 character string stored at the
+ address. To print that, use the examine command with the string format
+ (i.e. x /s 0x<address_in_register> or x /s $<register>).
+ 
+ For the third part of the password, examine the same memory location, but
+ return the results as an 8-byte long integer in hexadecimal via the giant
+ specifier (i.e. x /xg ).
+ 
+ Then, examine the memory location, but return the results as 2 4-byte
+ hexadecimal values via the word specifier (i.e. x /2xw ).  The fourth part
+ is the high 4-bytes.
+ 
+ Then, examine the memory as 8 1-byte hexadecimal values via the byte
+ specifier (i.e. x /8xb ).  The fifth part is the fifth byte of the string
+ in hex.
+ 
+ Finally, examine the memory as 8 1-byte decimals via the decimal specifier
+ (i.e. x /8db ). The sixth part is the sixth byte of the string in decimal.
+ Note that you could also print it directly by adding 5 to the register
+ then examining (i.e. x /8db $rdi+5)
+ "
+
+2. Run "gdb -tui ./Ch07_01_GdbPX"
+
+3. In gdb run the 'layout asm' or 'lay asm' command → This sets the display to show the assembly (asm) code
+
+4. Find the first "check_pass" call function in main and set a break point using "break *main+30" or "b *main+30"
+	NOTE : I used "...main+30" Your main line code at function call could be some other value such as "...main+45"
+
+5. Run the program using the 'run' or 'r' command. Then clear the terminal using 'ctrl + l' (the letter "L"). 
+
+6. Print the address of the 'rdi' register using "p /x $rdi"
+	
+	This is your first password of six → "0x402007" (this address is unique to me. Yours will be different)
+
+7. Print the character string stored at that address (rdi) using "x /s $rdi"
+	
+	This is your second password of six → "YWEzYjJm" (Unique to me. Yours will be different)
+
+8. Print the same memory location but as an 8-byte long integer in hexadecimal using "x /xg $rdi"
+	
+	This is your third password of six → "0x6d4a6a597a455759"
+
+9. Print the memory location as 2 4-byte hexadecimal values using "x /2xw $rdi"
+	
+	0x7a455759	0x6d4a6a59
+	
+	The fourth part is the high 4-byte address → 0x6d4a6a59
+
+10. Print the memory as 8 1-byte hexadecimal values using "x /8xb $rdi"
+	
+	0x59	0x57	0x45	0x7a	0x59	0x6a	0x4a	0x6d
+
+	The fifth part is the fifth byte of the string in hex → 0x59
+
+11. Print the memory as 8 1-byte decimals using "x /8db $rdi"
+	
+	89	87	69	122	89	106	74	109
+
+	The sixth part is the sixth byte of the string in decimal → 106
+
+12. All six passwords :
+
+	0x402007 YWEzYjJm 0x6d4a6a597a455759 0x6d4a6a59 0x59 106
+
+13. Solved!
+
+************************************************************************************************************
+Ch07_-1_Gdb_Setmem
+
+1. Ran "./Ch07_01_GdbSetmem"
+
+2. Message:
+"In GDB, one can overwrite a memory address while at a breakpoint using
+ the command "set {dt} 0xaddress=value" where dt is the data type,
+ address is the memory location in hex, and value is what you wish to
+ write to the address.  In this program, there is a comparison involving
+ an integer that, if satisfied, will print the password.  Changing the
+ integer to the appropriate value will then cause the password to be
+ printed. You can then use this password to solve the level outside of
+ the debugger.  Some other GDB commands that might help you include:
+    break *main+30    (sets a breakpoint at this location in main)
+    p /x $rbp-0x24    (prints the hexadecimal address of -0x24(%%rbp)
+    x /xw $rbp-0x24   (prints the integer at address -0x24(%%rbp)
+ "
+
+3. 
+
+
+
+
+
+************************************************************************************************************
 
 
 

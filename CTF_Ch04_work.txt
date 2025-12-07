@@ -228,7 +228,9 @@ Ch_04_08_FloatConvert
 	- 8 exp bits
 	- 23 frac bits
 
-  	| s |  exp  |    frac    |
+|    0    |  1010101  |          1          | 1011101010110101010101 |      
+|---------|-----------|---------------------|------------------------|
+|  s (1)  |  exp (7)  |  crossover bit (1)  |        frac (22)       |  = (1) + (7) + (1) + (22) = 31 → 0 to 32 bits
 
 	- s is sign bit
 	- exp field is an encoding to derive E (exponent)
@@ -245,6 +247,10 @@ Ch_04_08_FloatConvert
  
 7. 
 
+... COMPLETED USING LAB 3 CODE FOR FLOAT-2-HEX AND HEX-2-FLOAT!! NEED TO COME BACK TO THIS TO WRITE UP AS REVIEW FOR FINAL
 
+20. 46a4b800 61831.0
+
+21. Solved!
 
 
