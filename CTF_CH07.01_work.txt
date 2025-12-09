@@ -271,7 +271,7 @@ Ch07_01_GdbPX
 13. Solved!
 
 ************************************************************************************************************
-Ch07_-1_Gdb_Setmem
+Ch07_01_Gdb_Setmem
 
 1. Ran "./Ch07_01_GdbSetmem"
 
@@ -289,11 +289,45 @@ Ch07_-1_Gdb_Setmem
     x /xw $rbp-0x24   (prints the integer at address -0x24(%%rbp)
  "
 
-3. 
+3. Run "gdb ./Ch07_01_GdbSetmem"
 
+4. Type "layout asm" or "lay asm" to open assembly view
+	NOTE: Helpful to use "set disassembly-flavor intel" while in gdb to read in intel syntax
+	
+5. Set a breakpoint at the first compare command using "b *main+101" → Your line number may be different
 
+6. Set a breakpoint at the top of the print password function using "b *print_pswd"
 
+7. Run the program in gdb using 'r' or "run"
 
+8. When prompted to enter a password, you can enter whatever you like
+
+9. After typing password, change the value being compared. You will find that we can only change one value
+	
+	9.a Type "set {int} ($rbp-0x1c)=0xd0" → Your rbp address might be differet and the other value to compare (0xd0 in my case) might be different. Use your values.
+
+	9.b Type "continue" or 'c'
+
+10. gdb will stop at the first print_pswd breakpoint. Set another breakpoint after the inverse hash function call using "b *print_pswd+24" → your line number might be different
+
+11. Continue to the breakpoint you set by typing "continue" or 'c'
+
+12. At this point you can type "info registers" or "i r" or "i r $rax"
+	
+	NOTE: The inverse hash function returns the password into rax. Like for 32-bit eax is used for returns, for 64-bits, rax is used to return values.
+
+	NOTE: using "i r" command prints the address on the left and value at that address on the right. 
+
+	NOTE: Notice how the value is negative. This means that this is an unsigned value and needs to be printed with the correct format.
+
+13. To print the unsigned value use "p /u $rax"
+
+	NOTE: 'p' is the print command; '/u' is the unsigned format specifier; and $rax is the register we want to use.
+
+14. 15197980642638090065
+
+15. Solved!
+	
 
 ************************************************************************************************************
 
