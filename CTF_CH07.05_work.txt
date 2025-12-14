@@ -1,0 +1,112 @@
+CTF_CH07.05_work
+************************************************************************************************************
+************************************************************************************************************
+Ch07_05_ParamStack
+
+1. Run "./Ch07_05_ParamsStack"
+
+2. Message:
+"In this level, you will need to use gdb to find the password as it is
+ being passed as a parameter to a function with 10 parameters.  In x86-64,
+ the first six parameters are passed in rdi, rsi, rdx, rcx, r8, and r9.
+ Beyond that, they are placed in memory on the stack with the address of
+ the top of the stack held in rsp.  The password is not among the first
+ six parameters to the function call you must examine.
+"
+
+3. Run "gdb ./Ch07_05_ParamsStack"
+
+4. Type "lay asm" to open assembly view
+
+5. Inspect the first six (6) move qword commands after the first "xor" command. This is pushing six (6) strings to the stack frame. 
+
+	NOTE: One of this six (6) values will be our password.
+
+6. Set breakpoint after all the strings have been pushed at the "mov eax,0x0" command. Use "b *main+113" → your values might be different
+
+7. Run with 'r' and type in any password
+
+8. Record all six (6) strings by using "x /s $rbp-0x##", where ## are the values in your code
+	
+	NOTE: You can type the first "x /s $rbp-0x##" address and use the enter key to keep displaying the next password without typing it in. 
+
+	My code:
+		
+		x /s $rbp-0x41 = "Y9FinB6z"
+
+		x /s $rbp-0x38 = "pesncFkD"
+
+		x /s $rbp-0x2f = "NzhmMGE5"
+
+		x /s $rbp-0x26 = "ULrrP3lx"
+
+		x /s $rbp-0x1d = "ZKudcEdd"
+
+9. Lazy way... Test each password.
+
+10. "NzhmMGE5"
+
+11. Solved!
+
+************************************************************************************************************
+Ch07_05_ParamsRegs
+
+1. Ran "./Ch07_05_ParamsRegs"
+
+2. Message:
+"In this level, you will need to use gdb to find the password as it is
+ being passed as a parameter to a function with 6 parameters. For x86-64,
+ the mnemonic for passing parameters using registers is Diane's Silk Dress
+ Cost $89. (rdi rsi rdx rcx r8 r9)
+"
+
+3. Set a breakpoint at the last set of move commands using "b *main+221"
+
+4. Run the program using "run" or 'r'
+
+5. Print all the passwords stored on the stack using "x /s $rbp-0x##", where ## are values in your code.
+
+6. Record and test all passwords → You can type the first "x /s $rbp-0x##" address and use the enter key to keep displaying the next password without typing it in:
+
+	My code: 
+
+		- "x /s $rbp-0x77" = "IeuxMect"
+
+		- "x /s $rbp-0x6e" = "s27lzXgT"
+
+		- "x /s $rbp-0x65" = "H62Pe7ky"
+
+		- "x /s $rbp-0x5c" = "Br0MSLjX"
+
+		- "x /s $rbp-0x53" = "kO7wao8Q"
+
+		- "x /s $rbp-0x4a" = "s3sOylCO"
+
+		- "x /s $rbp-0x41" = "KpMCmNKz"
+
+		- "x /s $rbp-0x38" = "yZUEEOFo"
+
+		- "x /s $rbp-0x2f" = "rQwHzJrk"
+
+		- "x /s $rbp-0x26" = "SeCmlYB0"
+
+		- "x /s $rbp-0x1d" = "ZjQzZDhm"
+
+7. Lazy way... Test each password. Try the last password first!
+
+8. "ZjQzZDhm"
+
+9. Solved!
+
+
+************************************************************************************************************
+
+************************************************************************************************************
+
+************************************************************************************************************
+
+************************************************************************************************************
+
+************************************************************************************************************
+
+************************************************************************************************************

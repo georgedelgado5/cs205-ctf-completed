@@ -49,12 +49,113 @@ Ch07_04_LinkedList
  actual password to complete the level.
 "
 
-3. 
+3. Run "gdb ./Ch07_04_LinkedList"
+
+4. Activate assembly view using "layout asm" or "lay asm"
+
+5. Starting with main, inspect the code and identify what functions are being called. (ONLY READ IF YOU WANT TO UNDERSTAND WHAT THE CODE IS DOING)
+	
+	1. In main, the first function called is "try_command" → by default
+
+	2. In try command function, "dogs_before" function is called → by default
+
+	3. In dogs before function, no calls are made. However, there is a compare command that we need to modify
+		
+		3.1 Set a breakpoint at the compare command using "b *dogs_before+89" → your line value might be different
+
+		3.2 We want to avoid the jump command line "dogs_before+29" for values less than or equal to the compared value.
+
+			Example: my code: 0x4012f3 <dogs_before+89>	cmp DWORD PTR [rbp-0x14], 0x4
+	
+				 This compares the value at [rbp-0x14] with 0x4
+
+		3.3 Set the value at [rbp-0x14] to a value greater than 0x4 using "set {int} ($rbp-0x14)=0x5" ← You can use any value that is greater than or equal to 0x5
+
+
+	4. In try command function and after dogs before function, the "ferrets_before" is called → by default
 
 ************************************************************************************************************
+Ch07_03_XorStr
 
+1. Run "./Ch07_03_XorStr
+
+2. Message:
+"To thwart static analysis, code and data are often encrypted by packers
+ using a random key.  In this level, we have taken the password and packed
+ it using a sophisticated XOR scheme. To find the password, you will need to
+ unpack it by analyzing the binary using "objdump -d" or "gdb".
+"
+
+3. Run "gdb ./Ch07_03_XorStr"
+
+4. Use "lay asm" to open assembly view
+
+5. Inspect main. The "xor" command is used in a loop to generate the password. 
+
+6. Set a breakpoint at the scanf call using "b *main+110"
+
+	NOTE: This allows the loop and xor command to generate a password.
+
+7. Print the password using "x /s 0x404180"
+
+	NOTE: The address "0x404180" is reference multiple times. It is first set as the address that values will be passed onto → frame stack
+
+8. "VqEvrEcP"
+
+9. Solved!
 
 ************************************************************************************************************
+Ch07_04_SwitchTable
 
+1. Run "./Ch07_04_SwitchTable"
+
+2. Message:
+"Switch statements are often implemented using a switch table that consists
+ of pointers to code that are indexed by the value of the integer being
+ tested.  In this assignment, you will need to decode the switch table to
+ find out the value that will unlock the level.  The assembly output of the
+ program is in Ch3_06_SwitchTable.s for your viewing convenience
+"
+	!!!NOTE!!! : There are typos in the initial message. The output of the program should be "Ch07_04_SwitchTable.s"
+
+3. Run "gdb ./Ch07_04_SwtichTable"
+
+4. Type "lay asm" to open assembly view
+
+5. Inspect the "main" function for any compare - "cmp" - commands.
+
+	5a. The first subtract - "sub" - command after the scanf call is used to reduce our input to a smaller value.
+
+	5b. This smaller value must be smaller than four '4' as can be seen by the compare - "cmp" - command
+
+	5c. What this means: There are 5 cases : 0, 1, 2, 3, 4. 
+	
+		- If the value is greater (above... ja) it is set to the default case. 
+
+		- If the value is less (below... jb), the value is the difference from our input to the value "0xe973"
+	
+		- 0xe973 in decimal is 59763
+
+6. To find the five cases we can use the initial value of 59763, and increment by one (1) to check the next case
+	    
+7.  Therefore, the five switch cases can be checked by using the following inputs:
+
+	Case 0: 59763 - 59763 = 0
+
+	Case 1: 59764 - 59763 = 1
+
+	Case 2: 59765 - 59763 = 2
+
+	Case 3: 59766 - 59763 = 3
+
+	Case 4: 59767 - 59763 = 4
+
+	Anything above will be set to the default case.
+
+8. Enter each value as password to verify case: 59763, 59764, 59765, 59766, 59767
+
+9. 59765 : Case 2 
+
+10. Solved!
 
 ************************************************************************************************************
